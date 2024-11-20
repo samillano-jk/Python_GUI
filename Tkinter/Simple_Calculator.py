@@ -25,15 +25,28 @@ def button_op(op):
     
 
 def button_equal():
-    second_num = float(myEntry.get())
-    myEntry.delete(0, END)
-    op_dict = {
-        "+": f_num+second_num, 
-        "-": f_num-second_num, 
-        "x": f_num*second_num, 
-        "/": f_num/second_num
-    }
-    myEntry.insert(0, op_dict[operation])
+    try: 
+        second_num = float(myEntry.get())
+        myEntry.delete(0, END)
+
+        print(f"Operation: {operation}, Num1: {f_num}, num2: {second_num}")
+
+        if operation == "+":
+            myEntry.insert(0, f_num+second_num)
+        if operation == "-":
+            myEntry.insert(0, f_num-second_num)
+        if operation == "x":
+            myEntry.insert(0, f_num*second_num)
+        if operation == "/":
+            if second_num != 0:
+                myEntry.insert(0, f_num/second_num)
+            else: 
+                myEntry.insert(0, "Zero Division Error")
+
+        
+
+    except ValueError as v:
+        myEntry.insert(0, v)
 
     
 
