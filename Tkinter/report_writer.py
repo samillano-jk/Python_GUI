@@ -18,7 +18,7 @@ def report_writer():
     def time_update():
         now = dt.datetime.now()
         # intro_label.config(text=f"Today: {now.month}-{now.day}-{now.year}  {now.hour}:{now.minute}")
-        intro_label = Label(frame1, text=f"Today: {now.month}-{now.day}-{now.year}  {now.hour}:{now.minute}:{now.second}", bg="gray", font=font.Font(size=18), padx=5, pady=5)
+        intro_label = Label(frame1, text=f"Today: {now.month}-{now.day}-{now.year}  {now.hour}:{now.minute}:{now.second}", bg="gray", font=font.Font(size=18), padx=5, pady=5, width=40)
         intro_label.grid(row=0, columnspan=3)
         root.after(1000, time_update)
 
@@ -44,8 +44,11 @@ def report_writer():
 
 
     def save_file():
-        filename = filedialog.asksaveasfile(title="Save CSV file", defaultextension=".csv", filetypes=[("csv files", "*.csv"), ("all files", "*.*")])
-        uni_df.to_csv(filename)
+        if uni_df.empty:
+            messagebox.showwarning("Empty File", "File empty (No entries)")
+        else: 
+            filename = filedialog.asksaveasfile(title="Save CSV file", defaultextension=".csv", filetypes=[("csv files", "*.csv"), ("all files", "*.*")])
+            uni_df.to_csv(filename)
             
 
     def confirm():
@@ -75,7 +78,10 @@ def report_writer():
                     else: 
                         messagebox.showinfo("Header mismatched", "The column header of the file should be 'Date', 'Hour', 'Minute', 'Description'")
 
-                    
+    def quit():
+        quit_val = messagebox.askokcancel("Exit", "Do you want to exit?")
+        if quit_val:
+            root.destroy()
             
 
 
@@ -83,6 +89,7 @@ def report_writer():
 
     root = Tk()
     root.title("Monthly Report")
+    root.iconbitmap(r"C:\Users\samil\Downloads\report_document_finance_business_analysis_analytics_chart_icon_188615.ico")
     root.columnconfigure(0, minsize=670)
     root.rowconfigure(0, weight=1)
     root.geometry("687x600")
@@ -98,14 +105,14 @@ def report_writer():
     canvas.configure(yscrollcommand=scrollbar.set)
 
     # Main Frame
-    main_frame = LabelFrame(canvas, pady=20)
+    main_frame = LabelFrame(canvas, pady=20, bg="gray")
     canvas.create_window((0,0), window=main_frame, anchor="nw")
 
 
 
     # First Frame
     frame1 = LabelFrame(main_frame, text="Report Writer", padx=20, pady=50, height=520)
-    frame1.grid(row=0, column=0, padx=30, pady=30, columnspan=2)
+    frame1.grid(row=0, column=0, padx=30, pady=30, columnspan=3)
 
     # Intro w/ automatic date
     time_update()
@@ -178,7 +185,7 @@ def report_writer():
     desc_history = Label(history_frame, text="", font=font.Font(size=13), width=33)
 
     # Placements
-    history_frame.grid(row=1, column=0, padx=30, pady=30, columnspan=2)
+    history_frame.grid(row=1, column=0, padx=30, pady=30, columnspan=3)
     history_label.grid(row=11, column=0)
     hour_history.grid(row=11, column=1)
     minute_history.grid(row=11, column=2)
@@ -190,7 +197,10 @@ def report_writer():
     confirm_button.grid(row=4, column=0, pady=5)
 
     save_button = Button(main_frame, text="Save", command=save_file, width=10, height=1)
-    save_button.grid(row=4, column=1, pady=5)
+    save_button.grid(row=4, column=2, pady=5)
+
+    exit_button = Button(root, text="Exit", command=quit, width=10, height=1)
+    exit_button.grid(row=5, pady=5)
 
     main_frame.update_idletasks()
     canvas.config(scrollregion=canvas.bbox("all"))
@@ -201,4 +211,8 @@ def report_writer():
 
 
 report_writer()
+
+
+
+
 
